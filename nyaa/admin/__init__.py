@@ -1,1 +1,1 @@
-from .forms import UserAction
+from .forms import UserAction, MassUserAction

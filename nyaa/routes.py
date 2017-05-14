@@ -19,7 +19,7 @@ import sqlalchemy_fulltext.modes as FullTextMode
 from sqlalchemy_fulltext import FullTextSearch
 import shlex
 from werkzeug import url_encode
-from nyaa.admin import UserAction as AdminUserAction
+from nyaa.admin import UserAction as AdminUserAction, MassUserAction
 
 from itsdangerous import URLSafeSerializer, BadSignature
 
@@ -632,7 +632,7 @@ def send_verification_email(to_address, activ_link):
 
 #################################### ADMIN ####################################
 
-@app.route('/admin/users', methods=['GET'])
+@app.route('/admin/users', methods=['GET', 'POST'])
 def admin_user_dashboard():
 
     if not flask.g.user or not flask.g.user.is_admin:
@@ -640,6 +640,10 @@ def admin_user_dashboard():
 
     users = models.User.query.all()
     action_form = AdminUserAction(flask.request.form)
+    mass_actions = MassUserAction(flask.request.form)
+
+    if flask.request.method == 'POST':
+        mass_actions.execute()
 
     return flask.render_template('admin/users.html', users=users, form=action_form)
 

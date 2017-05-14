@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var userTableEl = document.querySelector('.user-table');
   var massActions = document.querySelector('#mass-actions select[name="action"]');
   var selectAllEl = document.querySelector('#select-all');
+  var massActionForm = document.querySelector('form#mass-actions');
 
   /**
    * @param {Node} node
@@ -27,6 +28,23 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
   }
+
+  massActionForm.addEventListener('submit', function (event) {
+    debugger;
+    var checkboxes = Array.prototype.slice.call(userTableEl.querySelectorAll('.checkbox'));
+    var selectedCheckboxes = checkboxes.filter(function (checkbox) {
+      return checkbox.checked;
+    });
+
+    var selectedIds = selectedCheckboxes.map(function (checkbox) {
+      return checkbox.getAttribute('data-user-id');
+    });
+
+    var hiddenInput = event.target.querySelector('input[name="selected_ids"]');
+    hiddenInput.value = selectedIds.join(',');
+
+    event.target.submit();
+  });
 
   selectAllEl.addEventListener('click', function (event) {
     event.preventDefault();

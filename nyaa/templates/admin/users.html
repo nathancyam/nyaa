@@ -16,8 +16,9 @@
 
     <div class="row actions">
         <div class="col-md-12">
-            <form class="form-inline" id="mass-actions">
+            <form method="post" class="form-inline" id="mass-actions">
                 <div class="form-group">
+                    <input type="hidden" name="selected_ids" value="">
                     <button class="btn btn-default" id="select-all">Select All</button>
                     <select name="action" class="form-control">
                         <option value="ban">Ban</option>
@@ -55,7 +56,7 @@
                     {% for user in users %}
                         <tr class="row-user">
                             <td>
-                                <input type="checkbox" class="checkbox" />
+                                <input type="checkbox" class="checkbox" data-user-id="{{ user.id }}" />
                             </td>
                             <td class="user">{{ user.username | safe }}</td>
                             <td class="email">{{ user.email | safe }}</td>

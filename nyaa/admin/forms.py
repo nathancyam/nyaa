@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import SelectField
+from wtforms import SelectField, StringField
 from nyaa.models import User, UserLevelType, UserStatusType
 
 
@@ -44,3 +44,13 @@ class UserAction(FlaskForm):
         }
 
         return statuses.get(status)
+
+
+class MassUserAction(UserAction):
+
+    selected_ids = StringField()
+
+    def execute(self):
+        ids = self.data['selected_ids'].split(',')
+        ids = [s for s in ids if s.isdigit()]
+        [super(MassUserAction, self).execute(user_id) for user_id in ids]
