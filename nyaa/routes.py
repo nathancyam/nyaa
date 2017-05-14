@@ -629,6 +629,19 @@ def send_verification_email(to_address, activ_link):
     server.quit()
 
 
+#################################### ADMIN ####################################
+
+@app.route('/admin/users', methods=['GET'])
+def admin_user_dashboard():
+
+    if not flask.g.user or not flask.g.user.is_admin:
+        flask.abort(403)
+
+    users = models.User.query.all()
+
+    return flask.render_template('admin/users.html', users=users)
+
+
 #################################### STATIC PAGES ####################################
 @app.route('/rules', methods=['GET'])
 def site_rules():
