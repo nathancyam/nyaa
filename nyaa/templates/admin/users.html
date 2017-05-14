@@ -1,12 +1,20 @@
 {% extends "layout.html" %}
+
+{% macro render_user_level(user) %}
+    <select name="level" class="form-control hidden">
+        <option value="0" {% if user.level == 0 %}selected{% endif %}>Regular</option>
+        <option value="1" {% if user.level == 1 %}selected{% endif %}>Trusted</option>
+        <option value="2" {% if user.level == 2 %}selected{% endif %}>Admin</option>
+        <option value="3" {% if user.level == 3 %}selected{% endif %}>Super Admin</option>
+    </select>
+{% endmacro %}
+
 {% block title %}Admin Dashboard - Users{% endblock %}
 
 {% block body %}
     <h1>Users</h1>
 
-    <div class="row">
-        <div class="col-md-12">
-            <form class="form-inline">
+    <div class="row"> <div class="col-md-12"> <form class="form-inline">
                 <div class="form-group">
                     <label for="mass-actions">Actions:</label>
                     <select class="form-control">
@@ -52,13 +60,15 @@
                             <td class="created-time">{{ user.created_time }}</td>
                             <td class="login-date">{{ user.last_login_date }}</td>
                             <td class="login-ip">{{ user.last_login_ip }}</td>
-                            <td>
-                                <form class="form-inline">
+                            <td class="actions">
+                                <form action="/admin/user/{{ user.id }}" method="post" class="form-inline">
+                                    {{ form.csrf_token }}
                                     <div class="form-group">
-                                        <select class="form-control">
+                                        <select name="action" class="form-control">
                                             <option value="ban">Ban</option>
-                                            <option value="promote">Promote</option>
+                                            <option value="level-change">Level Change</option>
                                         </select>
+                                        {{ render_user_level(user) }}
                                     </div>
                                     <button type="submit" class="btn btn-xs">Submit</button>
                                 </form>

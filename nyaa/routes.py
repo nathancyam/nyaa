@@ -19,6 +19,7 @@ import sqlalchemy_fulltext.modes as FullTextMode
 from sqlalchemy_fulltext import FullTextSearch
 import shlex
 from werkzeug import url_encode
+from nyaa.admin import UserAction as AdminUserAction
 
 from itsdangerous import URLSafeSerializer, BadSignature
 
@@ -638,8 +639,21 @@ def admin_user_dashboard():
         flask.abort(403)
 
     users = models.User.query.all()
+    action_form = AdminUserAction(flask.request.form)
 
-    return flask.render_template('admin/users.html', users=users)
+    return flask.render_template('admin/users.html', users=users, form=action_form)
+
+
+@app.route('/admin/user/<int:user_id>', methods=['POST'])
+def admin_user_action(user_id):
+
+    if not flask.g.user or not flask.g.user.is_admin:
+        flask.abort(403)
+
+    action_form = AdminUserAction(flask.request.form)
+    action_form.execute(user_id)
+
+    return flask.redirect('/admin/users')
 
 
 #################################### STATIC PAGES ####################################

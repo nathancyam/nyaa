@@ -1,11 +1,15 @@
 document.addEventListener('DOMContentLoaded', function () {
   var userTableEl = document.querySelector('.user-table');
 
-  userTableEl.addEventListener('click', function (event) {
-    if (!event.target.hasClass('row-user')) {
-      return event.preventDefault();
-    }
+  userTableEl.addEventListener('change', function (event) {
+    if (event.target.getAttribute('name') === 'action') {
+      var levelSelectEl = event.target.nextElementSibling;
 
-    debugger;
+      if (event.target.value === 'level-change' && levelSelectEl.classList.contains('hidden')) {
+        levelSelectEl.classList.remove('hidden');
+      } else {
+        levelSelectEl.classList.add('hidden');
+      }
+    }
   });
 });
