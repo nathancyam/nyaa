@@ -92,6 +92,10 @@ table.torrent-list thead th.sorting_desc:after {
 	padding: 1em 0;
 }
 
+.row.actions {
+	padding: 1em 0;
+}
+
 @media (max-width: 991px){
 	.col-md-5 {
 	    margin-left: 20px;

@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import SelectField
-from nyaa.models import User, UserLevelType
+from nyaa.models import User, UserLevelType, UserStatusType
 
 
 class UserAction(FlaskForm):
@@ -31,3 +31,16 @@ class UserAction(FlaskForm):
 
     def update_level(self, user, rank):
         pass
+
+    def level_text(self, level):
+        levels = dict(self.levels.choices)
+        return levels.get(level)
+
+    def status_text(self, status):
+        statuses = {
+            UserStatusType.INACTIVE: 'Inactive',
+            UserStatusType.BANNED: 'Banned',
+            UserStatusType.ACTIVE: 'Active'
+        }
+
+        return statuses.get(status)
