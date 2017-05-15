@@ -96,6 +96,26 @@ table.torrent-list thead th.sorting_desc:after {
 	padding: 1em 0;
 }
 
+.edit-mode {
+	display: none;
+}
+
+.edit-btn:before {
+    content: 'Edit';
+}
+
+.row-edit.editing .edit-mode {
+	display: inline-block;
+}
+
+.row-edit.editing .edit-btn:before {
+	content: 'Back';
+}
+
+.row-edit.editing .static-mode {
+	display: none;
+}
+
 @media (max-width: 991px){
 	.col-md-5 {
 	    margin-left: 20px;

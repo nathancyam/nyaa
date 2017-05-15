@@ -57,14 +57,79 @@ document.addEventListener('DOMContentLoaded', function () {
     })
   });
 
+  function rowHandler(event) {
+    var action = event.target.getAttribute('data-action');
+
+    var actions = {
+      markTrustedStatus: {
+        predicate: action === 'trust',
+        formSelector: 'input[name="status"]',
+        callback: function (formInput, node) {
+          formInput.value = "trust";
+          node.focus();
+          node.nextElementSibling.blur();
+        }
+      },
+
+      markBannedStatus: {
+        predicate: action === 'ban',
+        formSelector: 'input[name="status"]',
+        callback: function (formInput, node) {
+          formInput.value = "ban";
+          node.focus();
+          node.previousElementSibling.blur();
+        }
+      },
+
+      updateLevel: {
+        predicate: action === 'level-select',
+        formSelector: 'input[name="level"]',
+        callback: function (formInput, node) {
+          formInput.value = node.value;
+        }
+      }
+    };
+
+    Object.keys(actions)
+      .filter(function (action) { return actions[action].predicate; })
+      .forEach(function (action) {
+        action = actions[action];
+
+        return recurUserRow(event.target, function (userRow) {
+          return action.callback(
+            userRow.querySelector('.edit-form ' + action.formSelector),
+            event.target
+          );
+        });
+      });
+  }
+
   massActions.addEventListener('change', onLevelSelect);
 
   userTableEl.addEventListener('change', onLevelSelect);
 
   userTableEl.addEventListener('click', function (event) {
+    if (event.target.nodeName !== 'TD') {
+      return;
+    }
+
     return recurUserRow(event.target, function (userRow) {
       var checkbox = userRow.querySelector('.checkbox');
       checkbox.checked = !checkbox.checked;
     });
   });
+
+  userTableEl.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    if (!event.target.classList.contains('edit-btn')) {
+      return;
+    }
+
+    return recurUserRow(event.target, function (userRow) {
+      userRow.classList.toggle('editing');
+    });
+  });
+
+  userTableEl.addEventListener('click', rowHandler);
 });

@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% macro render_user_level(user) %}
-    <select name="level" class="form-control hidden">
+    <select name="level" class="form-control edit-mode" data-action="level-select">
         <option value="0" {% if user.level == 0 %}selected{% endif %}>Regular</option>
         <option value="1" {% if user.level == 1 %}selected{% endif %}>Trusted</option>
         <option value="2" {% if user.level == 2 %}selected{% endif %}>Admin</option>
@@ -44,42 +44,43 @@
                         <th></th>
                         <th>Username</th>
                         <th>Email</th>
-                        <th>Status</th>
-                        <th>Level</th>
                         <th>Created Time</th>
                         <th>Last Login Date</th>
                         <th>Last IP</th>
+                        <th>Status</th>
+                        <th>Level</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for user in users %}
-                        <tr class="row-user">
+                        <tr class="row-user row-edit">
                             <td>
                                 <input type="checkbox" class="checkbox" data-user-id="{{ user.id }}" />
                             </td>
                             <td class="user">{{ user.username | safe }}</td>
                             <td class="email">{{ user.email | safe }}</td>
-                            <td class="status">
-                                <span class="label label-primary">{{ form.status_text(user.status) }}</span>
-                            </td>
-                            <td class="level">
-                                <span class="label label-primary">{{ form.level_text(user.level) }}</span>
-                            </td>
                             <td class="created-time">{{ user.created_time }}</td>
                             <td class="login-date">{{ user.last_login_date }}</td>
                             <td class="login-ip">{{ user.last_login_ip }}</td>
+                            <td class="status">
+                                <span class="label label-primary static-mode">{{ form.status_text(user.status) }}</span>
+                                <div class="edit-mode btn-group" role="group" aria-label="status">
+                                    <button type="button" class="btn btn-sm btn-success" data-action="trust">Trust</button>
+                                    <button type="button" class="btn btn-sm btn-danger" data-action="ban">Ban</button>
+                                </div>
+                            </td>
+                            <td class="level">
+                                <span class="label label-primary static-mode">{{ form.level_text(user.level) }}</span>
+                                {{ render_user_level(user) }}
+                            </td>
                             <td class="actions">
-                                <form action="/admin/user/{{ user.id }}" method="post" class="form-inline">
+                                <form action="/admin/user/{{ user.id }}" method="post" class="form-inline edit-form">
                                     {{ form.csrf_token }}
-                                    <div class="form-group">
-                                        <select name="action" class="form-control">
-                                            <option value="ban">Ban</option>
-                                            <option value="level-change">Level Change</option>
-                                        </select>
-                                        {{ render_user_level(user) }}
-                                    </div>
-                                    <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+                                    <input type="hidden" value="{{ user.status }}" name="status">
+                                    <input type="hidden" value="{{ user.level }}" name="level">
+                                    <button class="btn btn-sm btn-info edit-btn" data-action="edit"></button>
+                                    <button type="submit" class="btn btn-sm btn-primary edit-mode">Submit</button>
                                 </form>
                             </td>
                         </tr>
