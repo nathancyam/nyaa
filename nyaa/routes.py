@@ -19,7 +19,7 @@ import sqlalchemy_fulltext.modes as FullTextMode
 from sqlalchemy_fulltext import FullTextSearch
 import shlex
 from werkzeug import url_encode
-from nyaa.admin import UserAction as AdminUserAction, MassUserAction
+from nyaa.admin import AdminUserView, UpdateUserRowView
 
 from itsdangerous import URLSafeSerializer, BadSignature
 
@@ -632,33 +632,8 @@ def send_verification_email(to_address, activ_link):
 
 #################################### ADMIN ####################################
 
-@app.route('/admin/users', methods=['GET', 'POST'])
-def admin_user_dashboard():
-
-    if not flask.g.user or not flask.g.user.is_admin:
-        flask.abort(403)
-
-    users = models.User.query.all()
-    action_form = AdminUserAction(flask.request.form)
-    mass_actions = MassUserAction(flask.request.form)
-
-    if flask.request.method == 'POST':
-        mass_actions.execute()
-
-    return flask.render_template('admin/users.html', users=users, form=action_form)
-
-
-@app.route('/admin/user/<int:user_id>', methods=['POST'])
-def admin_user_action(user_id):
-
-    if not flask.g.user or not flask.g.user.is_admin:
-        flask.abort(403)
-
-    action_form = AdminUserAction(flask.request.form)
-    action_form.execute(user_id)
-
-    return flask.redirect('/admin/users')
-
+app.add_url_rule('/admin/users', view_func=AdminUserView.as_view('admin_user'))
+app.add_url_rule('/admin/user/<int:user_id>', view_func=UpdateUserRowView.as_view('user_row'))
 
 #################################### STATIC PAGES ####################################
 @app.route('/rules', methods=['GET'])

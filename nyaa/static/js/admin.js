@@ -57,27 +57,23 @@ document.addEventListener('DOMContentLoaded', function () {
     })
   });
 
-  function rowHandler(event) {
+  function rowHandler(event, callback) {
     var action = event.target.getAttribute('data-action');
 
     var actions = {
-      markTrustedStatus: {
-        predicate: action === 'trust',
-        formSelector: 'input[name="status"]',
-        callback: function (formInput, node) {
-          formInput.value = "trust";
-          node.classList.add('selected');
-          node.nextElementSibling.classList.remove('selected');
+      banned: {
+        predicate: action === 'ban',
+        formSelector: 'input[name="banned"]',
+        callback: function (formInput) {
+          formInput.value = "2";
         }
       },
 
-      markBannedStatus: {
-        predicate: action === 'ban',
-        formSelector: 'input[name="status"]',
-        callback: function (formInput, node) {
-          formInput.value = "ban";
-          node.classList.add('selected');
-          node.previousElementSibling.classList.remove('selected');
+      unban: {
+        predicate: action === 'unban',
+        formSelector: 'input[name="banned"]',
+        callback: function (formInput) {
+          formInput.value = "1";
         }
       },
 
@@ -102,6 +98,10 @@ document.addEventListener('DOMContentLoaded', function () {
           );
         });
       });
+
+    return recurUserRow(event.target, function (userRow) {
+      callback(event, userRow);
+    });
   }
 
   massActions.addEventListener('change', onLevelSelect);
@@ -131,5 +131,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  userTableEl.addEventListener('click', rowHandler);
+  userTableEl.addEventListener('click', function (event) {
+    rowHandler(event, function (event, userRow) {
+      if (event.target.getAttribute('data-action').indexOf('ban') !== -1) {
+        userRow.querySelector('.edit-form').submit();
+      }
+    });
+  });
 });
