@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       updateLevel: {
         predicate: action === 'level-select',
-        formSelector: 'input[name="level"]',
+        formSelector: 'input[name="levels"]',
         callback: function (formInput, node) {
           formInput.value = node.value;
         }
@@ -133,8 +133,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
   userTableEl.addEventListener('click', function (event) {
     rowHandler(event, function (event, userRow) {
+      var form = userRow.querySelector('.edit-form');
+
+      // Submit the form normally if we hit the submit button
+      if (event.target.getAttribute('type') === 'submit') {
+        form.submit();
+      }
+
+      // Immediately make the POST request for bans
       if (event.target.getAttribute('data-action').indexOf('ban') !== -1) {
-        userRow.querySelector('.edit-form').submit();
+        form.submit();
       }
     });
   });

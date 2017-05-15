@@ -78,7 +78,7 @@
                             <td class="actions">
                                 <form action="/admin/user/{{ user.id }}" method="post" class="form-inline edit-form">
                                     {{ form.csrf_token }}
-                                    <input type="hidden" value="{{ user.status | int }}" name="banned">
+                                    <input type="hidden" value="{{ user.status.value }}" name="banned">
                                     <input type="hidden" value="{{ user.level | int }}" name="levels">
                                     <button class="btn btn-sm btn-info edit-btn" data-action="edit"></button>
                                     <button type="submit" class="btn btn-sm btn-primary edit-mode">Submit</button>

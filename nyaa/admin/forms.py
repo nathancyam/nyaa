@@ -41,8 +41,8 @@ class UserRowAction(FlaskForm):
         else:
             user.status = UserStatusType.ACTIVE
 
-    def update_level(self, user, rank):
-        pass
+    def update_level(self, user, level):
+        user.level = level
 
     def level_text(self, level):
         levels = {
