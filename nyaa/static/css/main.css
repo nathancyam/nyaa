@@ -112,6 +112,10 @@ table.torrent-list thead th.sorting_desc:after {
 	content: 'Back';
 }
 
+.btn-group .selected {
+	text-decoration: underline;
+}
+
 .row-edit.editing .static-mode {
 	display: none;
 }

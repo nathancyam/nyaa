@@ -66,8 +66,8 @@ document.addEventListener('DOMContentLoaded', function () {
         formSelector: 'input[name="status"]',
         callback: function (formInput, node) {
           formInput.value = "trust";
-          node.focus();
-          node.nextElementSibling.blur();
+          node.classList.add('selected');
+          node.nextElementSibling.classList.remove('selected');
         }
       },
 
@@ -76,8 +76,8 @@ document.addEventListener('DOMContentLoaded', function () {
         formSelector: 'input[name="status"]',
         callback: function (formInput, node) {
           formInput.value = "ban";
-          node.focus();
-          node.previousElementSibling.blur();
+          node.classList.add('selected');
+          node.previousElementSibling.classList.remove('selected');
         }
       },
 
